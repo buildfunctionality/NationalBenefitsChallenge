@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  products.api:
+    image: ${DOCKER_REGISTRY-}productsapi
+    container_name: products.api
+    build:
+      context: .
+      dockerfile: Products.Api/Dockerfile
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+
+  products.database:
+    image: postgres:latest
+    container_name: products.database
+    environment:
+      - POSTGRES_DB=products
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    volumes:
+      - ./.containers/products-db:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  products.cache:
+    image: redis:latest
+    restart: always
+    ports:
+      - '6379:6379'
