@@ -2,6 +2,7 @@
 
 namespace Products.Api.Entities
 {
+    [Table("subcategory")]
     public class SubCategory
     {
         [Column("id")]

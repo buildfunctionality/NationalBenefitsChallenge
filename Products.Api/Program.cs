@@ -7,6 +7,7 @@ using Products.Api.Services;
 using Products.Api.Utils;
 using StackExchange.Redis;
 using Serilog;
+using Products.Api.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IConnectionMultiplexer>(
@@ -52,11 +53,9 @@ Log.Information("Starting up");
 //            Console.WriteLine("Circuit Breaker Reset! DB is back online.");
 //        });
 
-//builder.Services.AddSingleton(circuitBreakerPolicy);
-//builder.Services.AddSingleton<IConnectionMultiplexer>(
-//    ConnectionMultiplexer.Connect("localhost:6379"));
-//builder.Services.AddScoped<LoggingDecorator<T>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ISubCategoryRepository, SubCategoryRepository>();
+
 builder.Services.AddScoped<Logger>();
 
 // Register Services with Decorator Pattern
@@ -65,9 +64,13 @@ builder.Services.AddScoped<Logger>();
 //builder.Services.AddScoped<IProductService, ProductService>();
 // Register ProductService as the "inner" service (implementation of IProductService)
 builder.Services.AddScoped<IProductService,ProductService>(); // Register the concrete class
+builder.Services.AddScoped<ISubCategoryService, SubCategoryService>(); // Register the concrete class
+
 //builder.Services.AddScoped<ProductService>();
 // Apply the Decorator AFTER the base service is registered
 builder.Services.AddScoped<IProductServiceCached, CachedProductService>();
+builder.Services.AddScoped<ISubCategoryServiceCached, CachedSubCategoryService>();
+
 
 
 var app = builder.Build();
@@ -80,5 +83,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapProductsEndpoints();
-
+app.MapSubCategoryEndpoints();
 app.Run();

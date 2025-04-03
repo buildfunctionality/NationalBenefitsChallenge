@@ -4,6 +4,7 @@
     using System.Text.Json;
 
     using Products.Api.Entities;
+    using Products.Api.Services.Interfaces;
     using Products.Api.Utils;
     using Serilog;
     using StackExchange.Redis;
@@ -32,7 +33,7 @@
 
             if (!string.IsNullOrEmpty(cachedData))
             {
-              //  _logger.LogInformation($"Get GetProductbyIdAsync chached {cachedData} from redis server ");
+                _logger.SetInformationLogMessage($"Get GetProductbyIdAsync chached {cachedData} from redis server ", "GetSubCategorybyIdAsync");
                 return JsonSerializer.Deserialize<Products>(cachedData)!;
             }
             CancellationToken ct = new CancellationToken();

@@ -4,71 +4,72 @@
     using System.Text.Json;
 
     using Products.Api.Entities;
+    using Products.Api.Services.Interfaces;
     using Products.Api.Utils;
     using Serilog;
     using StackExchange.Redis;
 
-    public class CachedSubCategoryService : Logger, IProductServiceCached
+    public class CachedSubCategoryService : Logger, ISubCategoryServiceCached
     {
-        private readonly IProductRepository _productRepository;
+        private readonly ISubCategoryRepository _subCategoryRepository;
         private readonly IDatabase _cache;
         private readonly Logger _logger;
 
-        public CachedSubCategoryService(IProductRepository productRepository, IConnectionMultiplexer redis, Logger logger)
+        public CachedSubCategoryService(ISubCategoryRepository subCategoryRepository, IConnectionMultiplexer redis, Logger logger)
         {
-            _productRepository = productRepository;
+            _subCategoryRepository = subCategoryRepository;
             _cache = redis.GetDatabase();
             _logger = logger;
         }
 
 
-        public async Task<Products> GetProductbyIdAsync(Guid id, CancellationToken token)
+        public async Task<SubCategory> GetSubCategorybyIdAsync(Guid id, CancellationToken token)
         {
-            _logger.SetInformationLogMessage("Get data for find one product ", "GetProductbyIdAsync");
+            _logger.SetInformationLogMessage("Get data for find one SubCategory ", "GetSubCategorybyIdAsync");
 
-
-            string cacheKey = $"product:{id}";
+            
+            string cacheKey = $"subcategory:{id}";
             string cachedData = await _cache.StringGetAsync(cacheKey);
 
             if (!string.IsNullOrEmpty(cachedData))
             {
-              //  _logger.LogInformation($"Get GetProductbyIdAsync chached {cachedData} from redis server ");
-                return JsonSerializer.Deserialize<Products>(cachedData)!;
+               _logger.SetInformationLogMessage($"Get GetSubCategorybyIdAsync chached {cachedData} from redis server ", "GetSubCategorybyIdAsync");
+                return JsonSerializer.Deserialize<SubCategory>(cachedData)!;
             }
             CancellationToken ct = new CancellationToken();
 
-            var product = await _productRepository.GetProductbyIdAsync(id, ct);
+            var subCategory = await _subCategoryRepository.GetSubCategorybyIdAsync(id, ct);
 
-            if (product != null)
+            if (subCategory != null)
             {
-                await _cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(product), TimeSpan.FromMinutes(5));
+                await _cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(subCategory), TimeSpan.FromMinutes(5));
             }
 
-            return product;
+            return subCategory;
         }
 
-        public async Task<IEnumerable<Products>> GetProductsAsync(CancellationToken ct, int page = 1, int pageSize = 10)
+        public async Task<IEnumerable<SubCategory>> GetSubCategoriesAsync(CancellationToken ct, int page = 1, int pageSize = 10)
         {
-            _logger.SetInformationLogMessage("Get data for list products ", "GetProductsAsync");
+            _logger.SetInformationLogMessage("Get data for list SubCategories ", "GetSubCategoriesAsync");
 
-            string cacheKey = $"product_list:page:{page}:size:{pageSize}";
+            string cacheKey = $"subcategory_list:page:{page}:size:{pageSize}";
             string cachedData = await _cache.StringGetAsync(cacheKey);
 
             if (!string.IsNullOrEmpty(cachedData))
             {
-             //   _logger.LogInformation($"Get GetProductsAsync chached {cachedData} from redis server ");
+                _logger.SetInformationLogMessage($"Get GetSubCategoriesAsync chached {cachedData} from redis server ", "GetSubCategoriesAsync");
 
-                return JsonSerializer.Deserialize<List<Products>>(cachedData)!;
+                return JsonSerializer.Deserialize<List<SubCategory>>(cachedData)!;
             }
 
-            var products = await _productRepository.GetProductsAsync(new CancellationToken(), page, pageSize);
+            var subCategories = await _subCategoryRepository.GetSubCategoryAsync(new CancellationToken(), page, pageSize);
 
-            if (products != null && products.Any())
+            if (subCategories != null && subCategories.Any())
             {
-                await _cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(products), TimeSpan.FromMinutes(5));
+                await _cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(subCategories), TimeSpan.FromMinutes(5));
             }
 
-            return products;
+            return subCategories;
         }
     }
 

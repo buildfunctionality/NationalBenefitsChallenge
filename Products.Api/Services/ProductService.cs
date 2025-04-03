@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Products.Api.Contracts;
 using Products.Api.Database;
 using Products.Api.Entities;
+using Products.Api.Services.Interfaces;
 using System.Reflection.Metadata.Ecma335;
 
 namespace Products.Api.Services

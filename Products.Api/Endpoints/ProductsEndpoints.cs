@@ -5,7 +5,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using Products.Api.Contracts;
 using Products.Api.Database;
 using Products.Api.Entities;
-using Products.Api.Services;
+using Products.Api.Services.Interfaces;
 using System;
 
 namespace Products.Api.Endpoints;
@@ -16,27 +16,22 @@ public static class ProductsEndpoints
     public static void MapProductsEndpoints(this IEndpointRouteBuilder app)
     {
         app.MapPost("products", async (
+            [FromServices] IProductService productService,
             CreateProductRequest request,
             ApplicationDbContext context,
             CancellationToken ct) =>
         {
-            var product = new Products.Api.Entities.Products
+            if (request.Id != Guid.Empty || request.Id != null)
             {
-                Name = request.Name,
-                Description = request.Description,
-                //Createdat = request.CreatedAt,
-                //Updatedat = request.Updatedat,
-                Id = request.Id,
-                Ski = request.Ski,
-                Subcategory = request.SubCategoryId,
-              
+                var productCreated = productService.SaveProductAsync(request, ct);
+                return await Task.FromResult(Results.Ok("Product created success"));
+            }
+         
+            else
+            {
+                return Results.Problem("Not created review your request");
             };
 
-            context.Add(product);
-
-            await context.SaveChangesAsync(ct);
-
-            return Results.Ok(product);
         });
 
         app.MapGet("products", async (
@@ -116,7 +111,7 @@ public static class ProductsEndpoints
 
         app.MapPut("product/update/{id}", async (
             [FromServices] IProductService productService,
-          [FromRoute]  Guid id,
+           [FromRoute]  Guid id,
            [FromBody] UpdateProductRequest request,
             ApplicationDbContext context,
             IDistributedCache cache,
@@ -137,26 +132,39 @@ public static class ProductsEndpoints
         });
 
         app.MapDelete("products/{id}", async (
+            [FromServices] IProductService productService,
             Guid id,
             ApplicationDbContext context,
             IDistributedCache cache,
             CancellationToken ct) =>
         {
-            var product = await context.Products
-                .FirstOrDefaultAsync(p => p.Id == id, ct);
 
-            if (product is null)
+            if (id != Guid.Empty || id != null)
             {
-                return Results.NotFound();
+                var productDeleted = await productService.DeleteProductAsync(id, ct);
+                return await Task.FromResult(Results.Ok("Product deleted success"));
+            }
+            else
+            {
+                return Results.NotFound($"Not found id {id} ,review your Id ");
             }
 
-            context.Remove(product);
 
-            await context.SaveChangesAsync(ct);
+            //var product = await context.Products
+            //    .FirstOrDefaultAsync(p => p.Id == id, ct);
 
-            await cache.RemoveAsync($"products-{id}", ct);
+            //if (product is null)
+            //{
+            //    return Results.NotFound();
+            //}
 
-            return await Task.FromResult(Results.Ok("Delete object success "));
+            //context.Remove(product);
+
+            //await context.SaveChangesAsync(ct);
+
+            //await cache.RemoveAsync($"products-{id}", ct);
+
+            //return await Task.FromResult(Results.Ok("Delete object success "));
         });
     }
 }
