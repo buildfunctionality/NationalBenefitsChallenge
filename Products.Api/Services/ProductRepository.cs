@@ -1,18 +1,23 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
+using Polly.CircuitBreaker;
 using Products.Api.Contracts;
 using Products.Api.Database;
 using Products.Api.Entities;
 using Products.Api.Services.Interfaces;
+using Products.Api.Utils;
 
 namespace Products.Api.Services
 {
     public class ProductRepository : IProductRepository
     {
         private readonly ApplicationDbContext context;
+        private readonly AsyncCircuitBreakerPolicy _circuitBreakerPolicy;
+
         public ProductRepository(ApplicationDbContext datacontext)
         {
            context = datacontext;
+           _circuitBreakerPolicy = DatabaseCircuitBreakerPolicy.CreatePolicy();
         }
 
         public async Task<bool> DeleteProduct(Guid id, CancellationToken token)
@@ -53,8 +58,7 @@ namespace Products.Api.Services
 
         public async Task<bool> SaveProduct(CreateProductRequest request, CancellationToken token)
         {
-            //var product = await context.Products
-            //.FirstOrDefaultAsync(p => p.Id == request.Id, token);
+          
 
             if (request is not null)
             {

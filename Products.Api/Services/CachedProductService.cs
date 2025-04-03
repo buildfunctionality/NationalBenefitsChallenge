@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
     using System.Text.Json;
-
+    using Polly.CircuitBreaker;
     using Products.Api.Entities;
     using Products.Api.Services.Interfaces;
     using Products.Api.Utils;
@@ -14,12 +14,14 @@
         private readonly IProductRepository _productRepository;
         private readonly IDatabase _cache;
         private readonly Logger _logger;
+        private readonly AsyncCircuitBreakerPolicy _circuitBreakerPolicy;
 
         public CachedProductService(IProductRepository productRepository, IConnectionMultiplexer redis, Logger logger)
         {
             _productRepository = productRepository;
             _cache = redis.GetDatabase();
             _logger = logger;
+            _circuitBreakerPolicy = DatabaseCircuitBreakerPolicy.CreatePolicy();
         }
 
 

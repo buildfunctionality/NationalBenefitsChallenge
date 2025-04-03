@@ -8,6 +8,8 @@ using Products.Api.Utils;
 using StackExchange.Redis;
 using Serilog;
 using Products.Api.Services.Interfaces;
+using Npgsql;
+using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IConnectionMultiplexer>(
@@ -40,16 +42,19 @@ Log.Information("Starting up");
 
 //// Configure Circuit Breaker Policy
 //var circuitBreakerPolicy = Policy
-//    .Handle<SqlException>()
+//    .Handle<PostgresException>()
 //    .CircuitBreakerAsync(
 //        exceptionsAllowedBeforeBreaking: 3,
 //        durationOfBreak: TimeSpan.FromSeconds(30),
 //        onBreak: (ex, timespan) =>
 //        {
+//            Log.Error("Circuit Breaker Tripped! DB is unavailable.");
+
 //            Console.WriteLine("Circuit Breaker Tripped! DB is unavailable.");
 //        },
 //        onReset: () =>
 //        {
+//            Log.Warning("Circuit Breaker Reset! DB is back online.");
 //            Console.WriteLine("Circuit Breaker Reset! DB is back online.");
 //        });
 
@@ -74,7 +79,7 @@ builder.Services.AddScoped<ISubCategoryServiceCached, CachedSubCategoryService>(
 
 
 var app = builder.Build();
-//AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
