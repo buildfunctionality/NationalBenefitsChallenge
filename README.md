@@ -10,6 +10,7 @@
 1. Install dependencies
 2. Run the application
   A) start docker with docker-compose up -d
+you can run if you set as start-up project the docker-compose 
 
 ## Features
 - CRUD for Products & SubCategories
