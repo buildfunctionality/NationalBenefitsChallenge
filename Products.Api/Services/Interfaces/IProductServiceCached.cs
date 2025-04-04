@@ -8,7 +8,8 @@ namespace Products.Api.Services.Interfaces
 
         Task<IEnumerable<Entities.Products>> GetProductsAsync(CancellationToken ct,
             int page = 1,
-            int pageSize = 10);
+            int pageSize = 10,
+            string name="");
 
 
     }

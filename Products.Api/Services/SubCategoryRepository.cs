@@ -4,6 +4,7 @@ using Products.Api.Contracts;
 using Products.Api.Database;
 using Products.Api.Entities;
 using Products.Api.Services.Interfaces;
+using System.Xml.Linq;
 
 namespace Products.Api.Services
 {
@@ -40,13 +41,14 @@ namespace Products.Api.Services
             return await Task.FromResult(subCategory);
         }
 
-        public async Task<IEnumerable<SubCategory>> GetSubCategoryAsync(CancellationToken ct, int page = 1, int pageSize = 10)
+        public async Task<IEnumerable<SubCategory>> GetSubCategoryAsync(CancellationToken ct, int page = 1, int pageSize = 10,string code="")
         {
             var subCategories = await context.SubCategories
-               .AsNoTracking()
-               .Skip((page - 1) * pageSize)
-               .Take(pageSize)
-               .ToListAsync(ct);
+            .AsNoTracking()
+            .Where(c => c.Code.StartsWith(code))
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .ToListAsync(ct);
 
             return await Task.FromResult(subCategories);
         }

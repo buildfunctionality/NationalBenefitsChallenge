@@ -50,27 +50,39 @@
             return product;
         }
 
-        public async Task<IEnumerable<Products>> GetProductsAsync(CancellationToken ct, int page = 1, int pageSize = 10)
+        public async Task<IEnumerable<Products>> GetProductsAsync(CancellationToken ct, int page = 1, int pageSize = 10, string name="")
         {
             _logger.SetInformationLogMessage("Get data for list products ", "GetProductsAsync");
 
-            string cacheKey = $"product_list:page:{page}:size:{pageSize}";
-            string cachedData = await _cache.StringGetAsync(cacheKey);
-
-            if (!string.IsNullOrEmpty(cachedData))
+            try
             {
-             //   _logger.LogInformation($"Get GetProductsAsync chached {cachedData} from redis server ");
+                string cacheKey = $"product_list:page:{page}:size:{pageSize}:name:{name}";
+                string cachedData = await _cache.StringGetAsync(cacheKey);
 
-                return JsonSerializer.Deserialize<List<Products>>(cachedData)!;
+                if (!string.IsNullOrEmpty(cachedData))
+                {
+                    _logger.SetInformationLogMessage($"Get GetProductsAsync chached {cachedData} from redis server ", "GetProductsAsync");
+
+                    return JsonSerializer.Deserialize<List<Products>>(cachedData)!;
+                }
+
+                var productsDB = await _productRepository.GetProductsAsync(new CancellationToken(), page, pageSize,name);
+
+                if (productsDB != null && productsDB.Any())
+                {
+                    await _cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(productsDB), TimeSpan.FromMinutes(3));
+                }
+
+            }
+            catch (RedisConnectionException ex)
+            {
+                _logger.SetErrorLogMessage($"Error on Redis server exception on {ex.Message} check your redis server", "GetProductsAsync", ex.ToString());
+                _logger.SetInformationLogMessage($"Get GetProductsAsync from database ", "GetProductsAsync");
+
             }
 
-            var products = await _productRepository.GetProductsAsync(new CancellationToken(), page, pageSize);
-
-            if (products != null && products.Any())
-            {
-                await _cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(products), TimeSpan.FromMinutes(5));
-            }
-
+            var products = await _productRepository.GetProductsAsync(new CancellationToken(), page, pageSize,name);
+          
             return products;
         }
     }

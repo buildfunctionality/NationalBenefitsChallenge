@@ -38,13 +38,13 @@ public static class ProductsEndpoints
        [FromServices] IProductServiceCached productService,
           [FromServices] ApplicationDbContext context,
           CancellationToken ct,
-       int page = 1,
-       int pageSize = 10
+          string name = "",
+          int page = 1,
+          int pageSize = 10
         ) =>
         {
-
           
-            var products = await productService.GetProductsAsync(ct, page, pageSize);
+            var products = await productService.GetProductsAsync(ct, page, pageSize,name);
             if (products == null)
             {
                 return Results.Problem($"Product not found page {page} and pageSize {pageSize} on the database verify your connection or your database");
@@ -58,9 +58,9 @@ public static class ProductsEndpoints
 
           IProductService cacheProductService,
           Guid id,
-            ApplicationDbContext context,
-            IDistributedCache cache,
-        CancellationToken ct) =>
+          ApplicationDbContext context,
+          IDistributedCache cache,
+          CancellationToken ct) =>
         {
 
             var product = await cacheProductService.GetProductbyIdAsync(id, ct);
@@ -69,19 +69,7 @@ public static class ProductsEndpoints
                 return Results.NotFound($"Product  Id {id} is not found Id {id} on the database verify your connection or your database");
             }
             else return Results.Ok(product);
-            //var product = await cache.GetAsync($"products-{id}",
-            //    async token =>
-            //    {
-            //        var product = await context.Products
-            //            .AsNoTracking()
-            //            .FirstOrDefaultAsync(p => p.Id == id, token);
-
-            //        return product;
-            //    },
-            //    CacheOptions.DefaultExpiration,
-            //    ct);
-
-            //return product is null ? Results.NotFound() : Results.Ok(product);
+           
         });
 
         app.MapPut("products/{id}", async (
@@ -97,12 +85,7 @@ public static class ProductsEndpoints
             {
                 var productCreated = productService.SaveProductAsync(request, ct);
                 return await Task.FromResult(Results.Ok("Product created success"));
-            }
-            //else { 
-            //    var product = await productService.GetProductbyIdAsync(id, ct);
-            //    var productCreated = productService.UpdateProductAsync(request, ct);
-            //    return Results.Ok(product);
-            //}
+            }  
             else {
                 return Results.Problem("Not created review your request"); 
             };

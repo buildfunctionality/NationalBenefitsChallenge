@@ -45,10 +45,11 @@ namespace Products.Api.Services
             return await Task.FromResult(product);
         }
 
-        public async Task<IEnumerable<Entities.Products>> GetProductsAsync(CancellationToken ct, int page = 1, int pageSize = 10)
+        public async Task<IEnumerable<Entities.Products>> GetProductsAsync(CancellationToken ct, int page = 1, int pageSize = 10, string name = "")
         {
             var products = await context.Products
                .AsNoTracking()
+               .Where(c=> c.Name.StartsWith(name))
                .Skip((page - 1) * pageSize)
                .Take(pageSize)
                .ToListAsync(ct);
@@ -58,7 +59,6 @@ namespace Products.Api.Services
 
         public async Task<bool> SaveProduct(CreateProductRequest request, CancellationToken token)
         {
-          
 
             if (request is not null)
             {
@@ -74,10 +74,8 @@ namespace Products.Api.Services
 
                 await context.Products.AddAsync(newProduct);
                 await context.SaveChangesAsync(token);
-            }
+            } else return false;
 
-           
-           
             return await Task.FromResult(true); 
         }
 

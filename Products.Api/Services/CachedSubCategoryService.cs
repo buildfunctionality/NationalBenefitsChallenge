@@ -48,26 +48,36 @@
             return subCategory;
         }
 
-        public async Task<IEnumerable<SubCategory>> GetSubCategoriesAsync(CancellationToken ct, int page = 1, int pageSize = 10)
+        public async Task<IEnumerable<SubCategory>> GetSubCategoriesAsync(CancellationToken ct, int page = 1, int pageSize = 10, string code="")
         {
             _logger.SetInformationLogMessage("Get data for list SubCategories ", "GetSubCategoriesAsync");
-
-            string cacheKey = $"subcategory_list:page:{page}:size:{pageSize}";
-            string cachedData = await _cache.StringGetAsync(cacheKey);
-
-            if (!string.IsNullOrEmpty(cachedData))
+            try
             {
-                _logger.SetInformationLogMessage($"Get GetSubCategoriesAsync chached {cachedData} from redis server ", "GetSubCategoriesAsync");
+                string cacheKey = $"subcategory_list:page:{page}:size:{pageSize}:code:{code}";
+                string cachedData = await _cache.StringGetAsync(cacheKey);
 
-                return JsonSerializer.Deserialize<List<SubCategory>>(cachedData)!;
+                if (!string.IsNullOrEmpty(cachedData))
+                {
+                    _logger.SetInformationLogMessage($"Get GetSubCategoriesAsync chached {cachedData} from redis server ", "GetSubCategoriesAsync");
+
+                    return JsonSerializer.Deserialize<List<SubCategory>>(cachedData)!;
+                }
+
+                var subCategoriesDb = await _subCategoryRepository.GetSubCategoryAsync(new CancellationToken(), page, pageSize,code);
+
+                if (subCategoriesDb != null && subCategoriesDb.Any())
+                {
+                    await _cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(subCategoriesDb), TimeSpan.FromMinutes(5));
+                }
+            }
+            catch (RedisConnectionException ex)
+            {
+                _logger.SetErrorLogMessage($"Error on Redis server exception on {ex.Message} check your redis server", "GetProductsAsync", ex.ToString());
+                _logger.SetInformationLogMessage($"Get SubCategories from database ", "GetSubCategoriesAsync");
+
             }
 
-            var subCategories = await _subCategoryRepository.GetSubCategoryAsync(new CancellationToken(), page, pageSize);
-
-            if (subCategories != null && subCategories.Any())
-            {
-                await _cache.StringSetAsync(cacheKey, JsonSerializer.Serialize(subCategories), TimeSpan.FromMinutes(5));
-            }
+            var subCategories = await _subCategoryRepository.GetSubCategoryAsync(new CancellationToken(), page, pageSize, code);
 
             return subCategories;
         }

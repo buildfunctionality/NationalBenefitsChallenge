@@ -9,7 +9,8 @@ namespace Products.Api.Services.Interfaces
 
         Task<IEnumerable<SubCategory>> GetSubCategoryAsync(CancellationToken ct,
             int page = 1,
-            int pageSize = 10);
+            int pageSize = 10,
+            string code="");
 
         Task<bool> SaveSubCategory(CreateSubCategoryRequest request, CancellationToken token);
 

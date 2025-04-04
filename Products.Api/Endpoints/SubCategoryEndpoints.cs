@@ -39,12 +39,13 @@ public static class SubCategoryEndpoints
           [FromServices] ApplicationDbContext context,
           CancellationToken ct,
        int page = 1,
-       int pageSize = 10
+       int pageSize = 10,
+       string code = ""
         ) =>
         {
 
           
-            var products = await subcategoryService.GetSubCategoriesAsync(ct, page, pageSize);
+            var products = await subcategoryService.GetSubCategoriesAsync(ct, page, pageSize,code);
             if (products == null)
             {
                 return Results.Problem($"Subcategory not found page {page} and pageSize {pageSize} on the database verify your connection or your database");
