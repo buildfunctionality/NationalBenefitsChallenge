@@ -133,21 +133,7 @@ public static class ProductsEndpoints
             }
 
 
-            //var product = await context.Products
-            //    .FirstOrDefaultAsync(p => p.Id == id, ct);
-
-            //if (product is null)
-            //{
-            //    return Results.NotFound();
-            //}
-
-            //context.Remove(product);
-
-            //await context.SaveChangesAsync(ct);
-
-            //await cache.RemoveAsync($"products-{id}", ct);
-
-            //return await Task.FromResult(Results.Ok("Delete object success "));
+         
         });
     }
 }

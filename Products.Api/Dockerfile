@@ -17,6 +17,12 @@ FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
 RUN dotnet publish "./Products.Api.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
+# Build the test project
+RUN dotnet build --no-restore -c Release
+
+# Run the tests
+CMD dotnet test --no-build -c Release
+
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
