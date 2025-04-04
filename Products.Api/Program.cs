@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Products.Api.Database;
 using Products.Api.Endpoints;
-using Products.Api.Extensions;
+
 using Products.Api.Services;
 using Products.Api.Utils;
 using StackExchange.Redis;
@@ -17,7 +17,6 @@ builder.Services.AddSingleton<IConnectionMultiplexer>(
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddAuthorization();
 builder.Services.AddDbContext<ApplicationDbContext>(
     options => options.UseNpgsql(builder.Configuration.GetConnectionString("Database")));
 
