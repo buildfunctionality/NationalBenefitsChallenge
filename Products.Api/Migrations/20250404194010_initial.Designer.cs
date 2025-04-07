@@ -21,42 +21,41 @@ namespace WebApplication3.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "9.0.3")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("Relational:MaxIdentifierLength", 63); // PostgreSQL max identifier length
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder); 
             modelBuilder.Entity("Products.Api.Entities.Products", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid") // PostgreSQL type for GUID
                         .HasColumnName("id");
 
                     b.Property<DateTimeOffset>("Createdat")
-                        .HasColumnType("datetimeoffset")
+                        .HasColumnType("timestamp with time zone") // PostgreSQL type for DateTimeOffset
                         .HasColumnName("created_at");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text") // PostgreSQL type for text
                         .HasColumnName("description");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text") // PostgreSQL type for text
                         .HasColumnName("name");
 
                     b.Property<string>("Ski")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text") // PostgreSQL type for text
                         .HasColumnName("ski");
 
                     b.Property<Guid>("Subcategory")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid") // PostgreSQL type for GUID
                         .HasColumnName("subcategory_id");
 
                     b.Property<DateTimeOffset>("Updatedat")
-                        .HasColumnType("datetimeoffset")
+                        .HasColumnType("timestamp with time zone") // PostgreSQL type for DateTimeOffset
                         .HasColumnName("updated_at");
 
                     b.HasKey("Id");
@@ -68,29 +67,29 @@ namespace WebApplication3.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid") // PostgreSQL type for GUID
                         .HasColumnName("id");
 
                     b.Property<Guid>("CategoryId")
-                        .HasColumnType("uniqueidentifier")
+                        .HasColumnType("uuid") // PostgreSQL type for GUID
                         .HasColumnName("category_id");
 
                     b.Property<string>("Code")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text") // PostgreSQL type for text
                         .HasColumnName("code");
 
                     b.Property<DateTimeOffset>("Created_at")
-                        .HasColumnType("datetimeoffset")
+                        .HasColumnType("timestamp with time zone") // PostgreSQL type for DateTimeOffset
                         .HasColumnName("created_at");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)")
+                        .HasColumnType("text") // PostgreSQL type for text
                         .HasColumnName("description");
 
                     b.Property<DateTimeOffset>("Updated_at")
-                        .HasColumnType("datetimeoffset")
+                        .HasColumnType("timestamp with time zone") // PostgreSQL type for DateTimeOffset
                         .HasColumnName("updated_at");
 
                     b.HasKey("Id");

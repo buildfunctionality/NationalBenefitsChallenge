@@ -1,80 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <LangVersion>latest</LangVersion>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <EnableMSTestRunner>true</EnableMSTestRunner>
-    <OutputType>Exe</OutputType>
-    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
-    <!--
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<LangVersion>latest</LangVersion>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<EnableMSTestRunner>true</EnableMSTestRunner>
+		<OutputType>Exe</OutputType>
+		<TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+		<!--
       Displays error on console in addition to the log file. Note that this feature comes with a performance impact.
       For more information, visit https://learn.microsoft.com/dotnet/core/testing/unit-testing-platform-integration-dotnet-test#show-failure-per-test
       -->
-    <TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
-  </PropertyGroup>
+		<TestingPlatformShowTestsFailure>true</TestingPlatformShowTestsFailure>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.14" />
-    <PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.14" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
-    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.12.6" />
-    <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" Version="1.4.0" />
-    <PackageReference Include="Moq" Version="4.20.72" />
-    <PackageReference Include="MSTest" Version="3.6.1" />
-    <PackageReference Include="xunit" Version="2.9.3" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.14" />
+		<PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.14" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+		<PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.12.6" />
+		<PackageReference Include="Microsoft.Testing.Extensions.TrxReport" Version="1.4.0" />
+		<PackageReference Include="Moq" Version="4.20.72" />
+		<PackageReference Include="MSTest" Version="3.6.1" />
+		<PackageReference Include="xunit" Version="2.9.3" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Products.Api\Products.Api.csproj" />
-2. **Navigate to the test project directory:**
-# NationalBenefits.Test
-4. **Build the project:**
-5. **Run the tests:**
-This project contains unit tests for the NationalBenefits application.
+	<ItemGroup>
+		<ProjectReference Include="..\Products.Api\Products.Api.csproj" />
+	</ItemGroup>
 
-## Prerequisites
-
-- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Visual Studio 2022](https://visualstudio.microsoft.com/vs/) or later with the following workloads:
-  - .NET desktop development
-  - ASP.NET and web development
-
-## Setup
-
-1. **Clone the repository:**
-git clone https://github.com/buildfunctionality/NationalBenefitsChallenge
-git checkout master
-## Project Structure
-
-- `NationalBenefits.Test.csproj`: The project file containing dependencies and configuration for the test project.
-- `Products.Api`: The main API project referenced by the test project.
-
-## Dependencies
-
-The project uses the following NuGet packages:
-
-- `Microsoft.AspNetCore.Mvc.Testing`
-- `Microsoft.AspNetCore.TestHost`
-- `Microsoft.NET.Test.Sdk`
-- `Microsoft.Testing.Extensions.CodeCoverage`
-- `Microsoft.Testing.Extensions.TrxReport`
-- `Moq`
-- `MSTest`
-- `xunit`
-
-## Configuration
-
-The project is configured to use the latest C# language version and has nullable reference types enabled. It also includes settings to enable MSTest runner and display test failures on the console.
-
-## Additional Information
-
-For more information on unit testing with .NET, visit the [official documentation](https://learn.microsoft.com/dotnet/core/testing/).
-  </ItemGroup>
-
-  <ItemGroup>
-    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
-  </ItemGroup>
+	<ItemGroup>
+		<Using Include="Microsoft.VisualStudio.TestTools.UnitTesting" />
+	</ItemGroup>
 
 </Project>
