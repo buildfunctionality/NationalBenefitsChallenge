@@ -5,6 +5,7 @@
 - Postgres
 - Redis
 - Configure connection strings in `appsettings.json`
+- Migrations
 
 ## Running the API
 1. Install dependencies
@@ -16,4 +17,4 @@ you can run if you set as start-up project the docker-compose
 - CRUD for Products & SubCategories
 - Redis Caching
 - Circuit Breaker
-- Loggingdddd
+- Logging
