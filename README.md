@@ -16,4 +16,4 @@ you can run if you set as start-up project the docker-compose
 - CRUD for Products & SubCategories
 - Redis Caching
 - Circuit Breaker
-- Logging
+- Loggingdddd
