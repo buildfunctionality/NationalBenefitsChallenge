@@ -18,6 +18,6 @@ namespace Products.Api.Services.Interfaces
 
         Task<bool> UpdateSubCategory(UpdateSubCategoryRequest request, CancellationToken token);
 
-        Task<bool> SaveSubCategoryBulk(List<CreateSubCategoryRequest> request, CancellationToken token);
+        Task<bool> SaveSubCategoryBulk(List<CreateBulkSubCategoryRequest> request, CancellationToken token);
     }
 }

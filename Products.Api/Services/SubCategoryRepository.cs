@@ -53,15 +53,14 @@ namespace Products.Api.Services
             return await Task.FromResult(subCategories);
         }
 
-        public async Task<bool> SaveSubCategoryBulk(List<CreateSubCategoryRequest> request, CancellationToken token)
+        public async Task<bool> SaveSubCategoryBulk(List<CreateBulkSubCategoryRequest> request, CancellationToken token)
         {
             SubCategory item = new SubCategory();
-            foreach (var sub in request.Where(s => s.Id == Guid.Empty))
-            {
-                sub.Id = Guid.NewGuid();            
+            foreach (var sub in request)
+            {          
                 item.Updated_at = DateTime.UtcNow;
                 item.Created_at = DateTime.UtcNow;
-                item.Id = sub.Id;
+                item.Id = Guid.NewGuid();
                 item.Description = sub.Description;
                 item.Code = sub.Code;
                 item.CategoryId = sub.CategoryId;

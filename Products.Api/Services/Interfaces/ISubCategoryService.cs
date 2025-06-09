@@ -13,7 +13,7 @@ namespace Products.Api.Services.Interfaces
 
         Task<bool> SaveSubCategoryAsync(CreateSubCategoryRequest request, CancellationToken token);
 
-        Task<bool> SaveSubCategoryBulkAsync(List<CreateSubCategoryRequest> request, CancellationToken token);
+        Task<bool> SaveSubCategoryBulkAsync(List<CreateBulkSubCategoryRequest> request, CancellationToken token);
 
         Task<bool> DeleteSubCategoryAsync(Guid id, CancellationToken token);
 

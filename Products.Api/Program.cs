@@ -72,7 +72,7 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    //app.ApplyMigrations();error on connection
+    app.ApplyMigrations();
 }
 
 app.MapProductsEndpoints();

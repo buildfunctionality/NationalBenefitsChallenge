@@ -34,7 +34,7 @@ public static class SubCategoryEndpoints
             };
         });
 
-        app.MapPost("/subcategories/bulk", async (List<CreateSubCategoryRequest> subcategories,
+        app.MapPost("/subcategories/bulk", async (List<CreateBulkSubCategoryRequest> subcategories,
             [FromServices] ISubCategoryService subCategoryService,
             CancellationToken ct) =>
         {
