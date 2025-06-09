@@ -8,7 +8,6 @@ namespace Products.Api.Contracts;
 public class CreateBulkSubCategoryRequest
 {
    
-    //public Guid Id { get; set; }
     [Required]
     public string Code { get; set; }
 
