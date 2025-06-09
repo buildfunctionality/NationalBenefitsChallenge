@@ -47,6 +47,13 @@ namespace Products.Api.Services
             return await Task.FromResult(product);
         }
 
+        public async Task<bool> SaveSubCategoryBulkAsync(List<CreateSubCategoryRequest> request, CancellationToken token)
+        {
+            var product = await _subCategoryRepository.SaveSubCategoryBulk(request, token);
+
+            return await Task.FromResult(product);
+        }
+
         public async Task<bool> UpdateSubCategoryAsync(UpdateSubCategoryRequest request, CancellationToken token)
         {
             var product = await _subCategoryRepository.UpdateSubCategory(request, token);

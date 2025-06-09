@@ -34,6 +34,18 @@ public static class SubCategoryEndpoints
             };
         });
 
+        app.MapPost("/subcategories/bulk", async (List<CreateSubCategoryRequest> subcategories,
+            [FromServices] ISubCategoryService subCategoryService,
+            CancellationToken ct) =>
+        {
+          
+            var productCreated = subCategoryService.SaveSubCategoryBulkAsync(subcategories, ct);
+
+            return Results.Created($"/subcategories/bulk", subcategories.Count);
+         
+        });
+
+
         app.MapGet("subcategory", async (
        [FromServices] ISubCategoryServiceCached subcategoryService,
           [FromServices] ApplicationDbContext context,

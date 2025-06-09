@@ -53,6 +53,26 @@ namespace Products.Api.Services
             return await Task.FromResult(subCategories);
         }
 
+        public async Task<bool> SaveSubCategoryBulk(List<CreateSubCategoryRequest> request, CancellationToken token)
+        {
+            SubCategory item = new SubCategory();
+            foreach (var sub in request.Where(s => s.Id == Guid.Empty))
+            {
+                sub.Id = Guid.NewGuid();            
+                item.Updated_at = DateTime.UtcNow;
+                item.Created_at = DateTime.UtcNow;
+                item.Id = sub.Id;
+                item.Description = sub.Description;
+                item.Code = sub.Code;
+                item.CategoryId = sub.CategoryId;
+
+            }
+
+            await context.SubCategories.AddRangeAsync(item);
+            await context.SaveChangesAsync();
+            return await Task.FromResult(true);
+        }
+
         public async Task<bool> SaveSubCategory(CreateSubCategoryRequest request, CancellationToken token)
         {
           

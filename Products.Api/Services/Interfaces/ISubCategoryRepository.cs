@@ -17,5 +17,7 @@ namespace Products.Api.Services.Interfaces
         Task<bool> DeleteSubCategory(Guid id, CancellationToken token);
 
         Task<bool> UpdateSubCategory(UpdateSubCategoryRequest request, CancellationToken token);
+
+        Task<bool> SaveSubCategoryBulk(List<CreateSubCategoryRequest> request, CancellationToken token);
     }
 }
